@@ -1,1 +1,1 @@
-const minN = (arr, n = 1) => [...arr].sort((a, b) => a - b).slice(0, n);
+const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
