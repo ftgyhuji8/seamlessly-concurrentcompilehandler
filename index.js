@@ -1,1 +1,3 @@
-const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
+function countConsonants(str) {
+  return str.match(/[bcdfghjklmnpqrstvwxyz]/gi).length;
+}
