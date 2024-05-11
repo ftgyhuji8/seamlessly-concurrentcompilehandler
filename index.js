@@ -1,33 +1,34 @@
-function totalNQueens(n) {
-  let count = 0;
-  const board = Array.from({ length: n }, () =>
-    Array.from({ length: n }, () => "."),
-  );
-  backtrack(0);
-  return count;
-  function backtrack(row) {
-    if (row === n) {
-      count++;
-      return;
+function minWindowSubstring(s, t) {
+  const map = new Map();
+  for (const char of t) {
+    map.set(char, (map.get(char) || 0) + 1);
+  }
+  let required = map.size;
+  let left = 0;
+  let right = 0;
+  let minLen = Infinity;
+  let substrStart = 0;
+  while (right < s.length) {
+    const char = s[right];
+    if (map.has(char)) {
+      map.set(char, map.get(char) - 1);
+      if (map.get(char) === 0) required--;
     }
-    for (let col = 0; col < n; col++) {
-      if (isValid(row, col)) {
-        board[row][col] = "Q";
-        backtrack(row + 1);
-        board[row][col] = ".";
+    while (required === 0) {
+      if (right - left + 1 < minLen) {
+        minLen = right - left + 1;
+        substrStart = left;
       }
+      const leftChar = s[left];
+      if (map.has(leftChar)) {
+        map.set(leftChar, map.get(leftChar) + 1);
+        if (map.get(leftChar) > 0) required++;
+      }
+      left++;
     }
+    right++;
   }
-  function isValid(row, col) {
-    for (let i = 0; i < row; i++) {
-      if (board[i][col] === "Q") return false;
-    }
-    for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-      if (board[i][j] === "Q") return false;
-    }
-    for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-      if (board[i][j] === "Q") return false;
-    }
-    return true;
-  }
+  return minLen === Infinity
+    ? ""
+    : s.substring(substrStart, substrStart + minLen);
 }
