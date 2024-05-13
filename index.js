@@ -1,34 +1,18 @@
-function minWindowSubstring(s, t) {
-  const map = new Map();
-  for (const char of t) {
-    map.set(char, (map.get(char) || 0) + 1);
-  }
-  let required = map.size;
-  let left = 0;
-  let right = 0;
-  let minLen = Infinity;
-  let substrStart = 0;
-  while (right < s.length) {
-    const char = s[right];
-    if (map.has(char)) {
-      map.set(char, map.get(char) - 1);
-      if (map.get(char) === 0) required--;
-    }
-    while (required === 0) {
-      if (right - left + 1 < minLen) {
-        minLen = right - left + 1;
-        substrStart = left;
+function isValidSudoku(board) {
+  const rows = new Array(9).fill().map(() => new Array(9).fill(0));
+  const cols = new Array(9).fill().map(() => new Array(9).fill(0));
+  const boxes = new Array(9).fill().map(() => new Array(9).fill(0));
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (board[i][j] !== ".") {
+        const num = Number(board[i][j]) - 1;
+        const k = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+        if (rows[i][num] || cols[j][num] || boxes[k][num]) return false;
+        rows[i][num] = 1;
+        cols[j][num] = 1;
+        boxes[k][num] = 1;
       }
-      const leftChar = s[left];
-      if (map.has(leftChar)) {
-        map.set(leftChar, map.get(leftChar) + 1);
-        if (map.get(leftChar) > 0) required++;
-      }
-      left++;
     }
-    right++;
   }
-  return minLen === Infinity
-    ? ""
-    : s.substring(substrStart, substrStart + minLen);
+  return true;
 }
